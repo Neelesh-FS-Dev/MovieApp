@@ -11,12 +11,14 @@ import {
   StatusBar,
 } from 'react-native';
 import axios from 'axios';
+import {connect} from 'react-redux';
 
 import {useSelector} from 'react-redux';
 import Button from '../Components/Button';
 
 const HomeScreen = ({navigation}) => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
   const userData = useSelector(state => state.auth.userData);
   const [watchlist, setWatchlist] = useState([]);
   const handleAddToWatchlist = movie => {
@@ -277,4 +279,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default connect(state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+}))(HomeScreen);

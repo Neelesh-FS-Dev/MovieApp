@@ -17,17 +17,11 @@ export const registerUser = userData => async dispatch => {
     const {username, email, password, phoneNumber} = userData;
     const encryptedUserData = JSON.stringify(userData);
 
-    // Perform your registration logic, e.g., API call
-    // Replace the following lines with your actual registration process
-    // Simulating a delay for demonstration purposes
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Store user data in Keychain and AsyncStorage
     await Keychain.setInternetCredentials('user', username, encryptedUserData);
     await AsyncStorage.setItem('user', JSON.stringify(userData));
 
-    // Dispatch a success action if needed
-    // Here, I'm dispatching a simple success action
     dispatch({type: REGISTER_SUCCESS});
   } catch (error) {
     dispatch({type: REGISTER_FAILURE, payload: error.message});

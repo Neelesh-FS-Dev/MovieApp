@@ -5,6 +5,7 @@ import {
 } from '../action/actionTypes';
 
 const initialState = {
+  isAuthenticated: false,
   userData: null,
   loading: false,
   error: null,
@@ -13,8 +14,11 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTHENTICATE_USER:
-      return {...state, userData: action.payload};
-
+      return {
+        ...state,
+        isAuthenticated: true,
+        userData: action.payload,
+      };
     case REGISTER_SUCCESS:
       return {...state, loading: false, error: null};
 
