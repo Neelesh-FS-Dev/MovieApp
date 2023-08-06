@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '../Components/Button';
@@ -9,10 +9,22 @@ const ProfileScreen = ({navigation}) => {
   const userData = useSelector(state => state.auth.userData);
 
   const handleLogout = async () => {
+    // Show an alert to confirm logout
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Logout', onPress: async () => await logoutUser()},
+      ],
+      {cancelable: true},
+    );
+  };
+
+  const logoutUser = async () => {
     await AsyncStorage.removeItem('user');
     navigation.navigate('Login');
   };
-
   if (!userData) {
     return (
       <View style={styles.container}>
@@ -28,6 +40,7 @@ const ProfileScreen = ({navigation}) => {
         <Text style={{fontSize: 24, fontWeight: '600'}}>
           Username: {userData.username}
         </Text>
+
         {/* Display more user details if available */}
         <Text style={styles.subtitle}>My Favorite Movies</Text>
         {/* Display favorite movies here */}

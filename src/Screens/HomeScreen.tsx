@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  StatusBar,
 } from 'react-native';
 import axios from 'axios';
 
@@ -86,7 +87,12 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.section}>
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
           <TextInput
-            style={{borderRadius: 20, borderWidth: 1, paddingHorizontal: 80}}
+            style={{
+              borderRadius: 20,
+              borderWidth: 1,
+              paddingHorizontal: 80,
+              backgroundColor: '#fff',
+            }}
             placeholder="Search movies..."
             value={searchQuery}
             onChangeText={text => setSearchQuery(text)}
@@ -109,6 +115,7 @@ const HomeScreen = ({navigation}) => {
                   style={{
                     textAlign: 'center',
                     marginTop: 10,
+                    color: '#fff',
                   }}>
                   {movie.title}
                 </Text>
@@ -123,7 +130,9 @@ const HomeScreen = ({navigation}) => {
   const renderTrendingMovies = () => {
     return (
       <View style={styles.section}>
-        <Text style={{marginTop: 20}}>Trending Movies Slider</Text>
+        <Text style={{marginTop: 20, color: '#fff'}}>
+          Trending Movies Slider
+        </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {movies.map(movie => (
             <TouchableOpacity
@@ -140,6 +149,7 @@ const HomeScreen = ({navigation}) => {
                   style={{
                     textAlign: 'center',
                     marginTop: 10,
+                    color: '#fff',
                   }}>
                   {movie.title}
                 </Text>
@@ -212,6 +222,8 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <StatusBar backgroundColor="#000" />
+
       {renderHeader()}
       {renderSearch()}
       {renderTrendingMovies()}
@@ -225,8 +237,8 @@ const HomeScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#DDE6ED',
-    padding: 20,
+    backgroundColor: '#000',
+    padding: 15,
   },
   header: {
     marginBottom: 20,
@@ -234,6 +246,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#fff',
   },
   section: {
     marginBottom: 20,
@@ -250,11 +263,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
     marginBottom: 10,
   },
 
   movieTitle: {
     textAlign: 'center',
+    color: '#fff',
   },
 });
 
