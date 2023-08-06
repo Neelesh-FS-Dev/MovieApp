@@ -7,7 +7,7 @@ import Button from '../Components/Button';
 
 const ProfileScreen = ({navigation}) => {
   const userData = useSelector(state => state.auth.userData);
-
+  console.log(userData);
   const handleLogout = async () => {
     // Show an alert to confirm logout
     Alert.alert(
@@ -25,6 +25,7 @@ const ProfileScreen = ({navigation}) => {
     await AsyncStorage.removeItem('user');
     navigation.navigate('Login');
   };
+
   if (!userData) {
     return (
       <View style={styles.container}>
@@ -35,17 +36,20 @@ const ProfileScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
+      <View style={styles.profileContainer}>
         <Text style={styles.title}>Profile</Text>
-        <Text style={{fontSize: 24, fontWeight: '600'}}>
-          Username: {userData.username}
-        </Text>
-
-        {/* Display more user details if available */}
-        <Text style={styles.subtitle}>My Favorite Movies</Text>
-        {/* Display favorite movies here */}
-        <Text style={styles.subtitle}>My Watchlist</Text>
-        {/* Display watchlist movies here */}
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Username:</Text>
+          <Text style={styles.value}>{userData.username}</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Email:</Text>
+          <Text style={styles.value}>{userData.email}</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Mobile Number:</Text>
+          <Text style={styles.value}>{userData.phoneNumber}</Text>
+        </View>
       </View>
       <Button title="Logout" onPress={handleLogout} variant="secondary" />
     </View>
@@ -55,19 +59,35 @@ const ProfileScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0', // Light gray background
+    backgroundColor: '#f0f0f0',
     padding: 20,
+  },
+  profileContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333', // Dark gray text color
+    color: '#333',
   },
-  subtitle: {
+  infoContainer: {
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#000',
+    paddingVertical: 20,
+    borderRadius: 10,
+    paddingHorizontal: 20,
+  },
+  label: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 10,
+    color: '#333',
+  },
+  value: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 5,
   },
 });
 

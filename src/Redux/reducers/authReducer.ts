@@ -1,17 +1,26 @@
+import {
+  AUTHENTICATE_USER,
+  REGISTER_FAILURE,
+  REGISTER_SUCCESS,
+} from '../action/actionTypes';
+
 const initialState = {
-  isAuthenticated: false,
-  userData: {}, // Make sure userData is initialized
+  userData: null,
+  loading: false,
+  error: null,
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'AUTHENTICATE_USER':
-      return {
-        ...state,
-        isAuthenticated: true,
-        userData: action.payload, // Set userData from action payload
-      };
-    // ...
+    case AUTHENTICATE_USER:
+      return {...state, userData: action.payload};
+
+    case REGISTER_SUCCESS:
+      return {...state, loading: false, error: null};
+
+    case REGISTER_FAILURE:
+      return {...state, loading: false, error: action.payload};
+
     default:
       return state;
   }

@@ -195,7 +195,11 @@ const HomeScreen = ({navigation}) => {
             <TouchableOpacity
               key={movie.id}
               onPress={() => navigateToDetails(movie)}>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
                 <Image
                   style={styles.movieImage}
                   source={{
