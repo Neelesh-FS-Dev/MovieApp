@@ -9,7 +9,6 @@ const ProfileScreen = ({navigation}) => {
   const userData = useSelector(state => state.auth.userData);
   console.log(userData);
   const handleLogout = async () => {
-    // Show an alert to confirm logout
     Alert.alert(
       'Logout',
       'Are you sure you want to logout?',

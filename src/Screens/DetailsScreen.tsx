@@ -22,6 +22,7 @@ const DetailsScreen = ({route}) => {
   const handleAddToWatchlist = () => {
     dispatch(addToWatchlist(movie)); // Action to add to watchlist
   };
+
   return (
     <ScrollView>
       <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0)" />
@@ -83,4 +84,5 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
 export default DetailsScreen;

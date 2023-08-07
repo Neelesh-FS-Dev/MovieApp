@@ -5,11 +5,13 @@ import {
   Text,
   ScrollView,
   Image,
-  TouchableOpacity,
   StyleSheet,
   TextInput,
   StatusBar,
 } from 'react-native';
+
+import {TouchableOpacity} from 'react-native-gesture-handler';
+
 import axios from 'axios';
 import {connect} from 'react-redux';
 
@@ -21,16 +23,16 @@ const HomeScreen = ({navigation}) => {
 
   const userData = useSelector(state => state.auth.userData);
   const [watchlist, setWatchlist] = useState([]);
+  const [sortOption, setSortOption] = useState('release_date'); // Def
+
   const handleAddToWatchlist = movie => {
     setWatchlist(prevWatchlist => [...prevWatchlist, movie]);
   };
-  console.log(handleAddToWatchlist);
   const navigateToDetails = movie => {
     navigation.navigate('Details', {movie});
   };
   const [movies, setMovies] = useState([]);
   useEffect(() => {
-    // Fetch movie data from the API
     axios
       .get('https://api.themoviedb.org/3/movie/popular', {
         params: {
@@ -46,6 +48,7 @@ const HomeScreen = ({navigation}) => {
         console.error('Error fetching movie data:', error);
       });
   }, []);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
@@ -99,7 +102,24 @@ const HomeScreen = ({navigation}) => {
             value={searchQuery}
             onChangeText={text => setSearchQuery(text)}
           />
-          <Button title="Search" onPress={handleSearch} variant="primary" />
+          <Button title="Search" onPress={handleSearch} />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 10,
+          }}>
+          <Button
+            title="Release Date"
+            onPress={() => setSortOption('release_date')}
+          />
+          <Button title="Genre" onPress={() => setSortOption('genre')} />
+          <Button title="Language" onPress={() => setSortOption('language')} />
+          <Button
+            title="Rating Range"
+            onPress={() => setSortOption('rating')}
+          />
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {searchResults.map(movie => (
@@ -221,7 +241,6 @@ const HomeScreen = ({navigation}) => {
     return (
       <View style={styles.footer}>
         {isAuthenticated ? <Text>Add favorite footer</Text> : null}
-        {/* Add your footer content */}
       </View>
     );
   };

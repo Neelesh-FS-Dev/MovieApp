@@ -9,12 +9,12 @@ export const fetchMoviesSuccess = movies => ({
   payload: movies,
 });
 
-export const addToFavorites = movieId => ({
+export const addToFavorites = movie => ({
   type: ADD_TO_FAVORITES,
-  payload: movieId,
+  payload: movie,
 });
 
-export const addToWatchlist = movieId => ({
+export const addToWatchlist = movie => ({
   type: ADD_TO_WATCHLIST,
-  payload: movieId,
+  payload: movie,
 });

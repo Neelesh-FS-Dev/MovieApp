@@ -1,10 +1,10 @@
-/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../Screens/HomeScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 import DetailsScreen from '../Screens/DetailsScreen';
+import FavoritesScreen from '../Screens/FavouriteScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,6 +32,11 @@ const AppNavigator = () => {
       <Tab.Screen
         name="Home"
         component={HomeTab}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="Favourite"
+        component={FavoritesScreen}
         options={{headerShown: false}}
       />
       <Tab.Screen
