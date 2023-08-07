@@ -1,28 +1,61 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {connect} from 'react-redux';
+import {
+  removeFromFavorites,
+  removeFromWatchlist,
+} from '../Redux/action/movieActions';
 
-const FavoritesScreen = ({favorites, watchlist}) => {
+const FavoritesScreen = ({favorites, watchlist, dispatch}) => {
+  const handleRemoveFromFavorites = movie => {
+    dispatch(removeFromFavorites(movie));
+  };
+
+  const handleRemoveFromWatchlist = movie => {
+    dispatch(removeFromWatchlist(movie));
+  };
+
+  const renderMovieItem = (item, isFavorite) => (
+    <View style={styles.movieContainer}>
+      <Image
+        style={styles.movieImage}
+        source={{
+          uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
+        }}
+      />
+      <View style={{flexWrap: 'wrap'}}>
+        {/* <Text style={styles.movieTitle}>{item.title}</Text> */}
+      </View>
+      <TouchableOpacity
+        onPress={
+          () =>
+            isFavorite
+              ? handleRemoveFromFavorites(item)
+              : handleRemoveFromWatchlist(item) // Change this line to handleRemoveFromWatchlist
+        }>
+        <Text style={styles.removeButton}>Remove</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Favorite Movies</Text>
       {favorites.length === 0 ? (
-        <Text>No favorite movies yet.</Text>
+        <Text style={{color: '#fff'}}>No favorite movies yet.</Text>
       ) : (
         <FlatList
           data={favorites}
-          keyExtractor={movie => movie.id.toString()}
-          renderItem={({item}) => (
-            <View style={styles.movieContainer}>
-              <Image
-                style={styles.movieImage}
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
-                }}
-              />
-              <Text style={styles.movieTitle}>{item.title}</Text>
-            </View>
-          )}
+          keyExtractor={item => item.id.toString()} // Use a unique identifier as the key
+          renderItem={({item}) => renderMovieItem(item, true)}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
@@ -30,22 +63,12 @@ const FavoritesScreen = ({favorites, watchlist}) => {
 
       <Text style={styles.title}>Watchlist</Text>
       {watchlist.length === 0 ? (
-        <Text>No movies in watchlist yet.</Text>
+        <Text style={{color: '#fff'}}>No movies in watchlist yet.</Text>
       ) : (
         <FlatList
           data={watchlist}
-          keyExtractor={movie => movie.id.toString()}
-          renderItem={({item}) => (
-            <View style={styles.movieContainer}>
-              <Image
-                style={styles.movieImage}
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
-                }}
-              />
-              <Text style={styles.movieTitle}>{item.title}</Text>
-            </View>
-          )}
+          keyExtractor={item => item.id.toString()} // Use a unique identifier as the key
+          renderItem={({item}) => renderMovieItem(item, false)}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
@@ -58,19 +81,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    padding: 20,
-    gap: 20,
+    padding: 30,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#fff',
+    marginTop: 40,
   },
   movieContainer: {
-    // marginBottom: 20,
     alignItems: 'center',
-    // marginTop: 50,
+    marginRight: 15,
   },
   movieImage: {
     width: 150,
@@ -80,21 +102,19 @@ const styles = StyleSheet.create({
   movieTitle: {
     marginTop: 10,
     fontSize: 16,
+    color: '#fff',
     fontWeight: 'bold',
-    color: '#D8D9DA',
-
     textAlign: 'center',
   },
-  movieOverview: {
+  removeButton: {
+    color: 'red',
     marginTop: 5,
-    fontSize: 14,
-    textAlign: 'center',
   },
 });
 
 const mapStateToProps = state => ({
   favorites: state.movie.favorites,
-  watchlist: state.movie.watchlist, // Make sure this matches your reducer structure
+  watchlist: state.movie.watchlist,
 });
 
 export default connect(mapStateToProps)(FavoritesScreen);

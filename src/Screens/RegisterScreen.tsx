@@ -1,7 +1,7 @@
 /* eslint-disable no-catch-shadow */
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {View, Text, TextInput, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Keychain from 'react-native-keychain';
 import Button from '../Components/Button';
@@ -35,9 +35,18 @@ const RegisterScreen = ({navigation}) => {
         encryptedUserData,
       );
       await AsyncStorage.setItem('user', JSON.stringify(userData));
-      navigation.navigate('Login');
+
+      Alert.alert(
+        'Registration Successful',
+        'Your account has been registered successfully. You can now log in.',
+        [{text: 'OK', onPress: () => navigation.navigate('Login')}],
+      );
     } catch (error) {
       console.error('Error registering user:', error);
+      Alert.alert(
+        'Registration Failed',
+        'An error occurred while registering your account. Please try again later.',
+      );
     }
   };
 

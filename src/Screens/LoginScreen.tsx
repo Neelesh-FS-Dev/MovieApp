@@ -1,14 +1,6 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Image,
-  StatusBar,
-} from 'react-native';
+import {View, Text, TextInput, StyleSheet, Image, Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Keychain from 'react-native-keychain';
 
 import {authenticateUser} from '../Redux/action/authActions';
@@ -31,7 +23,18 @@ const LoginScreen = ({navigation}) => {
           if (username === storedUsername && password === storedPassword) {
             dispatch(authenticateUser({username}));
 
-            navigation.navigate('App');
+            Alert.alert(
+              'Login Successful',
+              'You have successfully logged in!',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    navigation.navigate('App');
+                  },
+                },
+              ],
+            );
           } else {
             console.log('Invalid credentials');
           }
@@ -42,7 +45,7 @@ const LoginScreen = ({navigation}) => {
         console.log(error.message);
       }
     } else {
-      console.log('Please enter valid credentials');
+      Alert.alert('Invalid Input', 'Please enter valid credentials.');
     }
   };
 

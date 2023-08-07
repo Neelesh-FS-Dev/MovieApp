@@ -8,52 +8,41 @@ import {
   StyleSheet,
   TextInput,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
-
 import {TouchableOpacity} from 'react-native-gesture-handler';
-
 import axios from 'axios';
 import {connect} from 'react-redux';
-
+import {fetchPopularMovies} from '../Services/api'; // Import the function
 import {useSelector} from 'react-redux';
 import Button from '../Components/Button';
+import MovieItem from '../Components/MovieItem';
 
 const HomeScreen = ({navigation}) => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-
   const userData = useSelector(state => state.auth.userData);
-  const [watchlist, setWatchlist] = useState([]);
   const [sortOption, setSortOption] = useState('release_date'); // Def
+  const [movies, setMovies] = useState([]);
 
-  const handleAddToWatchlist = movie => {
-    setWatchlist(prevWatchlist => [...prevWatchlist, movie]);
-  };
   const navigateToDetails = movie => {
     navigation.navigate('Details', {movie});
   };
-  const [movies, setMovies] = useState([]);
   useEffect(() => {
-    axios
-      .get('https://api.themoviedb.org/3/movie/popular', {
-        params: {
-          api_key: '605d631c24d58410fc11dd1bd191dd07',
-          language: 'en-US',
-          page: 1,
-        },
-      })
-      .then(response => {
-        setMovies(response.data.results);
-      })
-      .catch(error => {
-        console.error('Error fetching movie data:', error);
-      });
+    const fetchMovies = async () => {
+      const popularMovies = await fetchPopularMovies();
+      setMovies(popularMovies);
+    };
+    fetchMovies();
   }, []);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const handleSearch = async () => {
     try {
+      setSearchLoading(true); // Start loading
+
       if (searchQuery) {
         const response = await axios.get(
           'https://api.themoviedb.org/3/search/movie',
@@ -72,6 +61,8 @@ const HomeScreen = ({navigation}) => {
       }
     } catch (error) {
       console.error('Error fetching search results:', error);
+    } finally {
+      setSearchLoading(false); // Stop loading
     }
   };
 
@@ -102,7 +93,16 @@ const HomeScreen = ({navigation}) => {
             value={searchQuery}
             onChangeText={text => setSearchQuery(text)}
           />
-          <Button title="Search" onPress={handleSearch} />
+          <Button
+            variant="secondary"
+            title="Search"
+            onPress={handleSearch}
+            disabled={searchLoading} // Disable the button while loading
+          >
+            {searchLoading ? (
+              <ActivityIndicator color="#fff" /> // Show loader if loading
+            ) : null}
+          </Button>
         </View>
         <View
           style={{
@@ -157,51 +157,11 @@ const HomeScreen = ({navigation}) => {
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {movies.map(movie => (
-            <TouchableOpacity
+            <MovieItem
               key={movie.id}
-              onPress={() => navigateToDetails(movie)}>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Image
-                  style={styles.movieImage}
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    marginTop: 10,
-                    color: '#fff',
-                  }}>
-                  {movie.title}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-    );
-  };
-
-  const renderWatchlist = () => {
-    return (
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Watchlist</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {watchlist.map(movie => (
-            <TouchableOpacity
-              key={movie.id}
-              onPress={() => navigateToDetails(movie)}>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Image
-                  style={styles.movieImage}
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
-                  }}
-                />
-                <Text style={styles.movieTitle}>{movie.title}</Text>
-              </View>
-            </TouchableOpacity>
+              movie={movie}
+              onPress={() => navigateToDetails(movie)}
+            />
           ))}
         </ScrollView>
       </View>
@@ -214,23 +174,11 @@ const HomeScreen = ({navigation}) => {
         <Text style={styles.sectionTitle}>All Movies</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {movies.map(movie => (
-            <TouchableOpacity
+            <MovieItem
               key={movie.id}
-              onPress={() => navigateToDetails(movie)}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  style={styles.movieImage}
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
-                  }}
-                />
-                <Text style={styles.movieTitle}>{movie.title}</Text>
-              </View>
-            </TouchableOpacity>
+              movie={movie}
+              onPress={() => navigateToDetails(movie)}
+            />
           ))}
         </ScrollView>
       </View>
@@ -252,7 +200,6 @@ const HomeScreen = ({navigation}) => {
       {renderHeader()}
       {renderSearch()}
       {renderTrendingMovies()}
-      {renderWatchlist()}
       {renderAllMovies()}
       {renderFooter()}
     </ScrollView>

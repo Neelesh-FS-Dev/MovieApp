@@ -11,20 +11,22 @@ import Button from '../Components/Button';
 import {useDispatch} from 'react-redux';
 import {addToWatchlist, addToFavorites} from '../Redux/action/movieActions';
 
-const DetailsScreen = ({route}) => {
+const DetailsScreen = ({route, navigation}) => {
   const {movie} = route.params; // Assuming you pass the movie object as a route parameter
   const dispatch = useDispatch();
 
   const handleAddToFavorites = () => {
     dispatch(addToFavorites(movie)); // Action to add to favorites
+    navigation.navigate('Favourite');
   };
 
   const handleAddToWatchlist = () => {
-    dispatch(addToWatchlist(movie)); // Action to add to watchlist
+    dispatch(addToWatchlist(movie));
+    navigation.navigate('Favourite'); // Navigate to the Watchlist screen
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: '#EDE4FF'}}>
       <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0)" />
       <View style={styles.container}>
         <Image
@@ -68,15 +70,18 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#000',
   },
   movieRatings: {
     fontSize: 18,
     marginBottom: 10,
+    color: '#000',
   },
   movieDescription: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
+    color: '#000',
   },
   buttonContainer: {
     flexDirection: 'row',
