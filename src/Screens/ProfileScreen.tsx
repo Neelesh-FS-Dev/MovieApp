@@ -58,7 +58,7 @@ const ProfileScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#000',
     padding: 20,
   },
   profileContainer: {
@@ -68,12 +68,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#fff',
   },
   infoContainer: {
     marginBottom: 15,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#fff',
     paddingVertical: 20,
     borderRadius: 10,
     paddingHorizontal: 20,
@@ -81,11 +81,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fff',
   },
   value: {
     fontSize: 16,
-    color: '#666',
+    color: '#fff',
     marginTop: 5,
   },
 });

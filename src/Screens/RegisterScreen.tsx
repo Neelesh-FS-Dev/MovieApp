@@ -5,33 +5,36 @@ import {View, Text, TextInput, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Keychain from 'react-native-keychain';
 import Button from '../Components/Button';
+import {registerUser} from '../Redux/action/authActions'; // Import the action
+import {connect} from 'react-redux';
 
-const RegisterScreen = ({navigation}) => {
+const RegisterScreen = ({navigation, loading, error, registerUser}) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [error, setError] = useState('');
 
   const handleRegister = async () => {
     if (!username || !email || !password || !confirmPassword || !phoneNumber) {
-      setError('All fields are required');
+      Alert.alert('All fields are required');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      Alert.alert('Passwords do not match');
       return;
     }
 
     const userData = {username, email, password, phoneNumber};
+    registerUser(userData);
     const encryptedUserData = JSON.stringify(userData);
 
     try {
       await Keychain.setInternetCredentials(
         'user',
         username,
+
         encryptedUserData,
       );
       await AsyncStorage.setItem('user', JSON.stringify(userData));
@@ -97,7 +100,14 @@ const RegisterScreen = ({navigation}) => {
     </View>
   );
 };
+const mapStateToProps = state => ({
+  loading: state.auth.loading,
+  error: state.auth.error,
+});
 
+const mapDispatchToProps = {
+  registerUser,
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -133,4 +143,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterScreen);

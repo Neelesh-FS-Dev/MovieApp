@@ -13,7 +13,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {fetchPopularMovies} from '../Services/api'; // Import the function
+import {fetchPopularMovies} from '../Services/api';
 import {useSelector} from 'react-redux';
 import Button from '../Components/Button';
 import MovieItem from '../Components/MovieItem';
@@ -21,7 +21,7 @@ import MovieItem from '../Components/MovieItem';
 const HomeScreen = ({navigation}) => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const userData = useSelector(state => state.auth.userData);
-  const [sortOption, setSortOption] = useState('release_date'); // Def
+  const [sortOption, setSortOption] = useState('release_date');
   const [movies, setMovies] = useState([]);
 
   const navigateToDetails = movie => {
@@ -41,7 +41,7 @@ const HomeScreen = ({navigation}) => {
 
   const handleSearch = async () => {
     try {
-      setSearchLoading(true); // Start loading
+      setSearchLoading(true);
 
       if (searchQuery) {
         const response = await axios.get(
@@ -62,7 +62,7 @@ const HomeScreen = ({navigation}) => {
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {
-      setSearchLoading(false); // Stop loading
+      setSearchLoading(false);
     }
   };
 
@@ -97,11 +97,8 @@ const HomeScreen = ({navigation}) => {
             variant="secondary"
             title="Search"
             onPress={handleSearch}
-            disabled={searchLoading} // Disable the button while loading
-          >
-            {searchLoading ? (
-              <ActivityIndicator color="#fff" /> // Show loader if loading
-            ) : null}
+            disabled={searchLoading}>
+            {searchLoading ? <ActivityIndicator color="#fff" /> : null}
           </Button>
         </View>
         <View

@@ -13,8 +13,12 @@ import {
   removeFromFavorites,
   removeFromWatchlist,
 } from '../Redux/action/movieActions';
+import {useNavigation} from '@react-navigation/native';
+import Button from '../Components/Button';
 
 const FavoritesScreen = ({favorites, watchlist, dispatch}) => {
+  const navigation = useNavigation(); // Get the navigation object
+
   const handleRemoveFromFavorites = movie => {
     dispatch(removeFromFavorites(movie));
   };
@@ -35,11 +39,10 @@ const FavoritesScreen = ({favorites, watchlist, dispatch}) => {
         {/* <Text style={styles.movieTitle}>{item.title}</Text> */}
       </View>
       <TouchableOpacity
-        onPress={
-          () =>
-            isFavorite
-              ? handleRemoveFromFavorites(item)
-              : handleRemoveFromWatchlist(item) // Change this line to handleRemoveFromWatchlist
+        onPress={() =>
+          isFavorite
+            ? handleRemoveFromFavorites(item)
+            : handleRemoveFromWatchlist(item)
         }>
         <Text style={styles.removeButton}>Remove</Text>
       </TouchableOpacity>
@@ -50,11 +53,15 @@ const FavoritesScreen = ({favorites, watchlist, dispatch}) => {
     <View style={styles.container}>
       <Text style={styles.title}>Favorite Movies</Text>
       {favorites.length === 0 ? (
-        <Text style={{color: '#fff'}}>No favorite movies yet.</Text>
+        <Button
+          variant="secondary"
+          title="Go to Home"
+          onPress={() => navigation.goBack()}
+        />
       ) : (
         <FlatList
           data={favorites}
-          keyExtractor={item => item.id.toString()} // Use a unique identifier as the key
+          keyExtractor={item => item.id.toString()}
           renderItem={({item}) => renderMovieItem(item, true)}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -63,11 +70,15 @@ const FavoritesScreen = ({favorites, watchlist, dispatch}) => {
 
       <Text style={styles.title}>Watchlist</Text>
       {watchlist.length === 0 ? (
-        <Text style={{color: '#fff'}}>No movies in watchlist yet.</Text>
+        <Button
+          variant="secondary"
+          title="Go to Home"
+          onPress={() => navigation.goBack()}
+        />
       ) : (
         <FlatList
           data={watchlist}
-          keyExtractor={item => item.id.toString()} // Use a unique identifier as the key
+          keyExtractor={item => item.id.toString()}
           renderItem={({item}) => renderMovieItem(item, false)}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
